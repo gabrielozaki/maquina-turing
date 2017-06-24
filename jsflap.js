@@ -477,17 +477,7 @@ Automaton.prototype.testArray = function(input_array){
 	}
 	return result_array;
 };
-//method tha returns a array of result by the array of inputs in afd test
-Automaton.prototype.testArrayAFD = function(input_array){
-	result_array = false;
-	for (var i = 0; i < input_array.length; i++) {
-		var machine = new Machine(this.getInitial(),input_array[i]);
-		result = machine.autoType();
-		return result;
-		//result_array.push(result);
-	}
-	return result_array;
-};
+
 //method tha returns the initial state from automaton
 Automaton.prototype.getInitial = function(){
 	for (var i = 0; i < this.states.length; i++) {
@@ -496,51 +486,6 @@ Automaton.prototype.getInitial = function(){
 	}
 	return null;
 };
-
-//Remove Empty moviment for all automaton
-Automaton.prototype.removeEmpty = function(){
-    var ini 			= this.getInitial();
-	var empty_count 	= 0;
-	var states_empty 	= [];
-	this.removeIsolated();
-
-	for(var i=0;i<this.states.length;i++)
-	{
-		for(var j=0;j<this.states[i].transitions.length;j++){
-
-			if(this.states[i].transitions[j].pattern == '' || this.states[i].transitions[j].pattern == 'λ'){
-				this.eliminateEmpty(this.states[i],j);
-			}
-		}	
-	}
-	this.removeIsolated();
-	updateCanvas();
-}
-
-//Eliminate the empty moviment from the state
-//Recive the state and the transition location
-Automaton.prototype.eliminateEmpty = function(state,empty_position){
-	//store the next reference, the empty transition will be removed
-	var next = state.transitions[empty_position].next;
-	if(next.end == true )
-		state.end = true;
-	//step one, remove the empty
-	state.removeTransition(state.transitions[empty_position]);
-	//Check for empty on the next states and eliminate then first(recursion)
-	if(state != next){
-		for(i=0;i<next.transitions.length;i++){
-			if(next.transitions[i].pattern=='λ'){
-				this.eliminateEmpty(next,i);
-			}
-		}
-
-		//After eliminate all or don't exists empty(base case of recursion), copy the next transitions
-		for(i=0;i<next.transitions.length;i++){
-			var trans = new Transition(next.transitions[i].pattern,next.transitions[i].next);
-			state.addTransition(trans);
-		}	
-	}
-}
 
 //Remove the isolated states
 Automaton.prototype.removeIsolated = function(){
@@ -562,20 +507,6 @@ Automaton.prototype.removeIsolated = function(){
 	}
 
 }
-
-//get the alphabet
-Automaton.prototype.getAlphabet = function(){
-	alphabet = [];
-	
-	for(var i=0;i<this.states.length;i++)
-		for(var j=0;j<this.states[i].transitions.length;j++)
-			if(alphabet.indexOf(this.states[i].transitions[j].pattern) == -1)
-				alphabet.push(this.states[i].transitions[j].pattern);
-	return alphabet;		
-}
-
-Automaton.prototype.getPaths = function(){};
-
 
 Automaton.prototype.findDoublePair = function(pair_array){
 	for (var i = 0; i < pair_array.length - 1; i++) {

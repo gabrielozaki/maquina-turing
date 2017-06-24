@@ -204,7 +204,7 @@ $("#btn_test").on('click', function (e) {
         input_array.push(input);
     });
     var array_result = _automaton.testArray(input_array);
-    var afd = _automaton.testArrayAFD(input_array);
+    
     updateTable(input_array,array_result,afd);
 });
 $("#grammar_btn_test").on('click', function (e) {
