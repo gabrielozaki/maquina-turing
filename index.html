@@ -1,0 +1,115 @@
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<head>
+<title>LFA</title>
+<link rel="stylesheet" type="text/css" href="bootstrap-3.3.6-dist/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="font-awesome-4.5.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="base.css">
+</head>
+<body>
+<script src="jsflap.js"></script>
+<div class="container-fluid">
+    <!--<ul class="nav nav-tabs">
+      <li role="presentation" ><a href="regex.html">Expressão Regular</a></li>
+      <li role="presentation" class="active"><a href="#">Autômato Finito</a></li>
+      <li role="presentation"><a href="grammar.html">Gramática</a></li>
+    </ul>-->
+    <div class="row row_container" id="AF">
+        <div class="col-md-2">
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-primary active" id="mouse_arrow">
+                    <input type="radio" name="options" id="option1" autocomplete="off" checked > 
+                    <i class="fa fa-mouse-pointer"></i>
+                </label>
+                <label class="btn btn-primary" id="state">
+                    <input type="radio" name="options" id="option2" autocomplete="off">
+                    <i class="fa fa-dot-circle-o"></i>
+                </label>
+                <label class="btn btn-primary" id="transition_arrow">
+                    <input type="radio" name="options" id="option3" autocomplete="off">
+                    <i class="fa fa-long-arrow-right"></i>
+                </label>
+                <label class="btn btn-primary" id="remove">
+                    <input type="radio" name="options" id="option4" autocomplete="off">
+                    <i class="fa fa-times"></i>
+                </label>
+            </div>
+        </div>
+        <div class="col-md-8">  
+            <div class="col-md-4">
+                <div class="form-group">
+                    Elemento: <label id="label_element"></label>
+                    <input type="text" id="input_element">
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="form-group" id="form_state">
+                    <div class="col-md-3">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="is_final"> Final
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="is_initial"> Inicial
+                            </label>
+                        </div>
+                    </div>
+                </div>  
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            <canvas id="drawCanvas" width="1000" height="600"></canvas>            
+        </div>
+        <div class="col-md-3">
+            <div class="panel panel-default">
+              <!-- Default panel contents -->
+                <div class="panel-heading">
+                    <h4>Automato Finito</h4>
+                    <h5>Entradas</h5>
+                </div>
+
+              <!-- Table -->
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Fitas</th>
+                    <!--<th>Resultado</th>-->
+                  </tr>
+                </thead>
+                <tbody id="test_tbody">
+                  <tr>
+                    <td class="td_input"><input type="text" class="input_test"></td>
+                    <!--<td class="td_result"></td>-->
+                  </tr>
+                </tbody>
+                <tfoot id="test_footer">
+                </tfoot>
+              </table>
+              <div class="panel-footer">
+                <input type="submit" class="btn btn-success" id="add_input" value="Adicionar Fita">
+                <input type="submit" value="Testar" class="btn btn-default pull-right" id="btn_test">
+              </div>
+                
+            </div>
+       
+        </div>
+    </div>
+    <div class="row row_container " id="grammar">
+        <p>Saida acho que simulação ficaria bom aqui</p>
+    </div>
+    <script type="text/javascript">
+        initCanvas("drawCanvas");
+    </script>
+</div>
+<script type="text/javascript" src="jquery/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
+<script src="input_functions.js"></script>
+<script src="mouse_functions.js"></script>
+</body>
+</html>
