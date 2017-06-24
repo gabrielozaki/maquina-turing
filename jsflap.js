@@ -1,27 +1,20 @@
 //GLOBAL VARS
-_canvas = null;
-_context = null;
-_automaton = null;
+var _canvas = null;
+var _context = null;
+var _automaton = null;
 
 //var to identify the element selected
-_selected_element = null;
-_selected_for_input = null;
+var _selected_element = null;
+var _selected_for_input = null;
 //BEGIN OF CLASSES
 //Class Transition
 //Requires two param
-//pattern - the pattern to be used on transition
+//action_array - explain in function
 //next - the next state of automaton
-var Transition = function(pattern, next) {
-	//Just one element like 'a' or '1'
-	//TODO validate pattern to length 1
-	if (pattern == '')
-	{
-		this.pattern = 'λ';
-	}
-	else{
-		this.pattern = pattern;	
-	}
-	
+var Transition = function(action_array, next) {
+	//transitions will recive a array of tapes actions
+        //with read, write and direction to take
+	this.action_array = action_array;
 	this.pattern_rect = {'x':0, 'y':0, 'width':0, 'height':0};
 	this.next = next;
 	// VISUAL PROPERTIES
@@ -46,7 +39,7 @@ Transition.prototype.drawTransition = function(origin, y_factor){
     var text_size = _context.measureText(text);
 	var arrow = [];
 	//Curve to the same State
-	if (origin == this.next)
+	if (origin === this.next)
 	{
 		//setting control points
 	  	cp1 = {'x':orig_x-65, 'y':orig_y-75};
@@ -72,7 +65,7 @@ Transition.prototype.drawTransition = function(origin, y_factor){
 	else
 	{
 		//straight line between states
-		if (bridge == 0)
+		if (bridge === 0)
 	    {
 	    	//calculating the text location
 	        text_x = (dest_x - orig_x)/2 + orig_x - text_size.width/2;
@@ -88,14 +81,14 @@ Transition.prototype.drawTransition = function(origin, y_factor){
 	    else
 	    {
 	    	//calculating control point
-	    	cp = calculateControlPoint(orig_x, orig_y, dest_x, dest_y, bridge)
+	    	cp = calculateControlPoint(orig_x, orig_y, dest_x, dest_y, bridge);
 
 	    	//calculating the text location
 	    	text_x = cp.x;
 	    	if (cp.y<cp.my)
-	    		control_factor = -bridge
+	    		control_factor = -bridge;
 	    	else
-	    		control_factor = bridge
+	    		control_factor = bridge;
 	    	text_y = cp.y + 5 + (bridge*control_factor)*(y_factor*15);
 	    	//calculate the arrow
 	    	arrow = calculateArrow(cp.x, cp.y, dest_x, dest_y, radius);
@@ -151,8 +144,8 @@ State.prototype.setXY = function(x, y) {
 State.prototype.getXY = function() {
     return{
         "x": this.x,
-        "x": this.y
-    }
+        "y": this.y
+    };
 };
 
 //Method used to find a transition object in position x,y
@@ -233,11 +226,11 @@ State.prototype.drawTransitions = function(){
 		array_next.push(next);
 	}
 };
-function countElementOnArray(array, element)
-{	
+
+function countElementOnArray(array, element){	
 	count = 0;
 	for (var i = 0; i < array.length; i++) {
-		if(array[i]==element)
+		if(array[i]===element)
 		{
 			count++;
 		}
@@ -247,7 +240,7 @@ function countElementOnArray(array, element)
 //method used to properly remove the transition
 State.prototype.removeTransition = function(trans){
 	for (var i = 0; i<this.transitions.length ;i++) {
-		if (this.transitions[i] == trans)
+		if (this.transitions[i] === trans)
 		{
 			var removed = this.transitions.splice(i,1);
 			return removed;
@@ -255,7 +248,7 @@ State.prototype.removeTransition = function(trans){
 	}
 };
 
-State.prototype.getNextStateByPattern = function(pattern){
+/*State.prototype.getNextStateByPattern = function(pattern){
 	var states = [];
 	for(var i=0;i<this.transitions.length;i++)
 	{
@@ -265,7 +258,7 @@ State.prototype.getNextStateByPattern = function(pattern){
 	}
 	return states;
 
-}
+}*/
 //END OF STATE METHODS
 //Class Automaton
 //Don't need parameters
@@ -300,20 +293,20 @@ Automaton.prototype.getStateOn = function(x,y){
 //Method use to find any object in position x,y
 Automaton.prototype.getElementOn = function(x,y){
 	state = this.getStateOn(x, y);
-	if(state != null)
+	if(state !== null)
 	{
-		return state
+		return state;
 	}
 	else
 	{
 		for (var i=0; i<this.states.length; i++){
 			trans = this.states[i].getTransitionOn(x, y);
-			if (trans != null){
+			if (trans !== null){
 				return trans;
 			}
 		}
 	}
-	return null
+	return null;
 };
 //addState
 //Add one state to states
@@ -330,10 +323,10 @@ Automaton.prototype.createState = function(x, y, label){
 };
 //method used to create a transition between the prev and next states
 //and set the pattern of a transition
-Automaton.prototype.createTransition = function(prev, next, pattern){
-	if (prev != null && next != null)
+Automaton.prototype.createTransition = function(prev, next, action_array){
+	if (prev !== null && next !== null)
 	{
-		var trans = new Transition(pattern,next);
+		var trans = new Transition(action_array,next);
 		var same_direction = this.getTransitionsOnDirection(prev, next);
 		if (same_direction.length > 0)
 		{
@@ -372,11 +365,11 @@ Automaton.prototype.getAllTransitions = function(){
 //method used to find all next transitions var to a state
 Automaton.prototype.findNextToState = function(state){
 	var all_trans = this.getAllTransitions();
-	var next_to_state_array = []
+	var next_to_state_array = [];
 	for (var i =0; i < all_trans.length; i++) 
 	{
 		trans = all_trans[i];
-		if (trans.next == state)
+		if (trans.next === state)
 		{
 			next_to_state_array.push(trans);		
 		}
@@ -390,7 +383,7 @@ Automaton.prototype.findStateFromTrans = function(trans){
 		var state_aux = this.states[i];
 		for(j=0; j<state_aux.transitions.length; j++)
 		{
-			if (state_aux.transitions[j]==trans)
+			if (state_aux.transitions[j]===trans)
 			{
 				return state_aux;
 			}
@@ -400,11 +393,11 @@ Automaton.prototype.findStateFromTrans = function(trans){
 };
 //method used to get all transitions in the same direction on the same states
 Automaton.prototype.getTransitionsOnDirection = function(prev, next){
-	same_direction = []
+	same_direction = [];
 	pointing_next_array = this.findNextToState(next);
 	for (var i = 0; i < pointing_next_array.length; i++) {
 		var state_aux = this.findStateFromTrans(pointing_next_array[i]);
-		if (state_aux == prev)
+		if (state_aux === prev)
 		{
 			same_direction.push(pointing_next_array[i]);
 		}
@@ -414,7 +407,7 @@ Automaton.prototype.getTransitionsOnDirection = function(prev, next){
 //method used to set null all next transitions var to a state
 Automaton.prototype.removeAllNextToState = function(state){
 	var next_to_state_array = this.findNextToState(state);
-	var i =0
+	var i =0;
 	for (; i < next_to_state_array.length; i++) 
 	{
 		this.removeTransition(next_to_state_array[i]);
@@ -425,7 +418,7 @@ Automaton.prototype.removeAllNextToState = function(state){
 Automaton.prototype.removeState = function(state){
 	for (var i =0; i < this.states.length; i++) 
 	{
-		if (this.states[i] == state)
+		if (this.states[i] === state)
 		{	
 			this.removeAllNextToState(state);
 			removed = this.states.splice(i,1);
@@ -497,7 +490,7 @@ Automaton.prototype.removeIsolated = function(){
 		for(var i=0;i<this.states.length;i++){
 			var origin = this.findNextToState(this.states[i]);
 
-			if(origin.length == 0 && this.states[i].ini == false)
+			if(origin.length === 0 && this.states[i].ini === false)
 			{
 				//avoid to exiting loop, in case of removeState
 				this.removeState(this.states[i]);
@@ -506,7 +499,7 @@ Automaton.prototype.removeIsolated = function(){
 		}	
 	}
 
-}
+};
 
 Automaton.prototype.findDoublePair = function(pair_array){
 	for (var i = 0; i < pair_array.length - 1; i++) {
@@ -516,7 +509,7 @@ Automaton.prototype.findDoublePair = function(pair_array){
 			if (j<pair_array.length){
 				var state_2 = pair_array[j][0];
 				var next_2 = pair_array[j][1];
-				if ((state_1 == state_2) && (next_1 == next_2)){
+				if ((state_1 === state_2) && (next_1 === next_2)){
 					return [state_2, next_2];
 				}
 			}
@@ -533,7 +526,7 @@ Automaton.prototype.spliceDoublePair = function(pair_array){
 			if (j<pair_array.length){
 				var state_2 = pair_array[j][0];
 				var next_2 = pair_array[j][1];
-				if ((state_1 == state_2) && (next_1 == next_2)){
+				if ((state_1 === state_2) && (next_1 === next_2)){
 					pair_array.splice(j,1);
 					return [state_2, next_2];
 				}
@@ -579,7 +572,7 @@ Input.prototype.next = function(){
 //Verify if input is empty
 Input.prototype.isEmpty = function(){
 	//console.log(this.input);
-	if(this.input == "")
+	if(this.input === "")
 	{
 		return true;
 
@@ -607,11 +600,11 @@ Cursor.prototype.findNext = function(pattern)
 	//Non determistic automaton can have more then one hit
 
 	for(var i=0; i < this.state.transitions.length;i++)
-		if(this.state.transitions[i].pattern == pattern)
+		if(this.state.transitions[i].pattern === pattern)
 			next.push(this.state.transitions[i]); //Add to next, deterministic will have only one element
 
 	//FAIL if don't hit the pattern
-	if(next.length == 0)
+	if(next.length === 0)
 		return false;
 
 	return next;	
@@ -625,11 +618,11 @@ Cursor.prototype.findEmpty = function()
 	next = [];
 
 	for(var i=0; i < this.state.transitions.length;i++)
-		if(this.state.transitions[i].pattern == 'λ')
+		if(this.state.transitions[i].pattern === 'λ')
 			next.push(this.state.transitions[i]); //Add to next
 
 	//FAIL if don't hit the pattern
-	if(next.length == 0)
+	if(next.length === 0)
 		return false;
 
 	return next;	
@@ -678,7 +671,7 @@ Machine.prototype.step = function(){
 	for(var i=0; i < loop_max;i++)
 	{
 		//verify dead cursors
-		if(this.cursor[i].state == false)
+		if(this.cursor[i].state === false)
 			continue;
 		
 		//look for empty
@@ -717,7 +710,7 @@ Machine.prototype.step = function(){
 				tmp_cursor.move(next_states[j].next);
 				this.cursor.push(tmp_cursor);
 			}
-		}else if(next_states.length == 1)
+		}else if(next_states.length === 1)
 			this.cursor[i].move(next_states[0].next);
 		else
 			this.cursor[i].move(false);
@@ -737,10 +730,10 @@ Machine.prototype.check = function(){
 	if(this.input.isEmpty()){
 		for(var i=0; i < this.cursor.length ;i++){
 			//verify dead cursors
-			if(this.cursor[i].state == false)
+			if(this.cursor[i].state === false)
 				continue;
 			
-			if(this.cursor[i].state.end == true)
+			if(this.cursor[i].state.end === true)
 				success = 1;
 		}
 	}else{
@@ -749,35 +742,18 @@ Machine.prototype.check = function(){
 	return success;	
 };
 
-//Verify if automaton is AFD or AFND
-Machine.prototype.autoType = function(){
-	for(var i=0;i<_automaton.states.length;i++){
-		sorted = _automaton.states[i].transitions.sort();
-		for(var j=0;j<sorted.length-1;j++){
-			if(sorted[j].pattern == sorted[j+1].pattern){
-				return false;
-			}
-		}
-	}_automaton.states.transitions
-	
-	if(this.AFD == true)
-		return true;
-	else
-		return false;
-}
-
 Machine.prototype.execute = function(){
 	success=0;
-	while(success==0)
+	while(success===0)
 	{
 		this.step();
 		success = this.check();
 	}
-	if(success == 1)
+	if(success === 1)
 		return true;
 	else
 		return false;
-}
+};
 //END OF MACHINE METHODS
 
 
@@ -860,7 +836,7 @@ function calculateArrow(orig_x, orig_y, dest_x, dest_y, radius)
     	"right_y": rightpointY,
     	"mid_x": midpointX,
     	"mid_y": midpointY};
-    return arrow
+    return arrow;
 };
 
 //calculate control point between two states and the mY var to check sides
@@ -887,12 +863,12 @@ function calculateControlPoint(orig_x, orig_y, dest_x, dest_y, bridge)
     var height = 30.0, tx, ty, px, py, p2x, p2y; 
 
     //Calculating the apex
-    if(bridge == 1)
+    if(bridge === 1)
     {
         midX = midX + height*normalX; 
         midY = midY + height*normalY; 
     }
-    else if (bridge == -1)
+    else if (bridge === -1)
     {
         midX = midX + (-1)*height*normalX; 
         midY = midY + (-1)*height*normalY; 
@@ -914,7 +890,7 @@ function calculateControlPoint(orig_x, orig_y, dest_x, dest_y, bridge)
     cpx = midX-tx;
     cpy = controlY-ty;
     cp = {'x':cpx, 'y':cpy, 'my': mY};
-    return cp
+    return cp;
 };
 
 //function to draw the arrow 
