@@ -1,0 +1,18 @@
+.tape{
+
+}
+rect{
+    fill: white;
+    stroke: black;
+    stroke-width: 0.5px;
+}
+
+.cur_element{
+    fill: rgba(100, 100, 100, 0.16);
+}
+.right{
+    fill: rgba(255, 0, 0, 0.16);
+}
+.wrong{
+    fill: rgba(255, 0, 0, 0.16);
+}
