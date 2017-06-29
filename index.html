@@ -37,7 +37,7 @@
         </div>
         <div class="col-md-8">  
             <div class="col-md-4">
-                <div class="form-group">
+                <div id="form_old" class="form-group">
                     Elemento: <label id="label_element"></label>
                     <input type="text" id="input_element">
                 </div>
@@ -154,10 +154,12 @@
         TapesSimulator(chart, input_tapes);
     </script>
     <script>
+/*
         function changeTransition(i, action){
             console.log(i);
             console.log(action)
         }
+        */
         var aux_size = 5;
         var table_trans = document.getElementById("trans_tape");
         table_trans.innerHTML = '';
@@ -173,7 +175,7 @@
                         onchange="changeTransition('+i+', \'write\', this)">\
                     </td>\
                     <td class="td_input" >\
-                        <input id="inpt_read_'+i+'" type="text" class="input_test" style="width: 50px;"\
+                        <input id="inpt_move_'+i+'" type="text" class="input_test" style="width: 50px;"\
                         onchange="changeTransition('+i+', \'move\', this)">\
                     </td>\
                   </tr>\

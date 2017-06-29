@@ -14,8 +14,7 @@ function change_selected_for_input(element)
     {
         _selected_for_input = element;
         console.log(_selected_for_input.pattern);
-        $('#input_element').val(_selected_for_input.pattern);
-        $('#form_state').hide();
+        updateInputData();
     }
     else{
         return;
@@ -46,7 +45,7 @@ $("#input_element").on('change', function () {
 function changeTransition(i, action, input){
     console.log(i);
     console.log(action)
-    var text = input.val();
+    var text = input.value;
     console.log(text);
     console.log(_selected_for_input);
     if (Transition.prototype.isPrototypeOf(_selected_for_input))
@@ -56,7 +55,24 @@ function changeTransition(i, action, input){
 		}
         _selected_for_input.action_array[i][action] = text;
     }
+    updateCanvas();
 }
+function updateInputData(){
+
+    if (Transition.prototype.isPrototypeOf(_selected_for_input))
+    {
+        var action_array = _selected_for_input.action_array;
+        for (var i = 0; i< action_array.length; i++){
+            var inpt_read = document.getElementById("inpt_read_"+i);
+            var inpt_write = document.getElementById("inpt_write_"+i);
+            var inpt_move = document.getElementById("inpt_move_"+i);
+            inpt_read.value = action_array[i]["read"];
+            inpt_write.value = action_array[i]["write"];
+            inpt_move.value = action_array[i]["move"];
+        }
+    }
+}
+
 $("#is_final").on('click', function (e) {
     if (State.prototype.isPrototypeOf(_selected_for_input))
     {

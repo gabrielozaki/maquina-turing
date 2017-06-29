@@ -90,10 +90,15 @@ $("#drawCanvas").on('mouseup', function (e) {
         case MouseState.TRANS:
             if (State.prototype.isPrototypeOf(_selected_element))
             {
+                var aux_size = 5;
                 var state = _automaton.getStateOn(x,y);
                 if (state != null)
                 {
-                    _selected_element = _automaton.createTransition(_selected_element, state, '');
+                    var action_array_raw = [];
+                    for (var i=0; i< aux_size; i++){
+                        action_array_raw.push({"read":"","write":"","move":"S"});
+                    }
+                    _selected_element = _automaton.createTransition(_selected_element, state, action_array_raw);
                     change_selected_for_input(_selected_element);
                 }
             }

@@ -15,7 +15,7 @@ function convertInputIntoTapes(input_array, array_size){
                 new_array.push(array[j]);
             }
             else{
-                new_array.push("e");
+                new_array.push("λ");
             }
 
         }
