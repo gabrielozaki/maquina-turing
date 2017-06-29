@@ -556,7 +556,7 @@ var Input = function (input) {
     this.input = input.split('');
     //Copy of input, the main input will explode on test ("lol" => "l","o","l")
     this.input_copy = input;
-    
+
     //every tape will have a index
     //R diretion will increment the index
     //L will decrement the index, if negative, will alocate a new position in the begining of array
@@ -564,18 +564,18 @@ var Input = function (input) {
     this.index = 0;
 };
 //BEGIN INPUT METHODS
-Input.prototype.moveRight = function (){
-    this.index ++;
+Input.prototype.moveRight = function () {
+    this.index++;
     //Case the index reach some position out of the scope, alocate a new position with a empty value
-    if(this.index <= this.input.length){
+    if (this.index <= this.input.length) {
         this.input.push("e");
     }
 };
 
-Input.prototype.moveLeft = function (){
-    this.index --;
+Input.prototype.moveLeft = function () {
+    this.index--;
     //Case the index reach some position out of the scope, alocate a new position with a empty value
-    if(this.index < 0){
+    if (this.index < 0) {
         this.index = 0;
         //
         this.input.unshift("e");
@@ -584,13 +584,13 @@ Input.prototype.moveLeft = function (){
 
 //Just to make a reference to stay extension of turing machine
 //Don't do nothing to index
-Input.prototype.moveStay = function (){
+Input.prototype.moveStay = function () {
     console.log("stay");
 };
 
 //Cannot be only write because already exists a js function with this name
 //Value is what will be write on the position
-Input.prototype.writeOnPos = function (value){
+Input.prototype.writeOnPos = function (value) {
     this.input[this.index] = value;
 };
 
@@ -622,7 +622,7 @@ var Cursor = function () {
 //FIND NEXT
 //The patern_array will be a array of patterns
 //All patterns must be hit to success
-Cursor.prototype.findNext = function (pattern_array){
+Cursor.prototype.findNext = function (pattern_array) {
     //Test every transition
     for (var i = 0; i < this.state.transitions.length; i++) {
         var success = false;
@@ -676,22 +676,39 @@ Machine.prototype.step = function () {
     //0 - undefined (the cursor have next states, so we have to continue)
     //1 - SUCESSS (reach the end and the cursor is on a terminal state)
 
-    
+
     //will create a array of patterns, one pattern by tape
     var pattern_array = [];
     for (var i = 0; i < this.input.length; i++) {
         var aux = this.input[i].readOnPos();
         pattern_array.push(aux);
     }
-    
+
     //get the next states
-    next_state = this.cursor.findNext(pattern_array);
-    
+    trans_next_state = this.cursor.findNext(pattern_array);
+
     //checks if we have a next state
-    if (next_state.length !== false ) {
+    if (trans_next_state.length !== false) {
         //if we have a next state, move to him and keep the state undefined
         
-        this.cursor.move(next_state.next);
+        //Now, we apply the necessary input changes, like write the new value e move the index
+        for (var i = 0; i < this.input.length; i++) {
+            //Write the new value based in the transition action_array
+            this.input[i].writeOnPos(trans_next_state.action_array[i]["write"]);
+            //Move using the moviment
+            //R - Right
+            //L - Left
+            //S - Stay
+            if(trans_next_state.action_array[i]["move"] === "R"){
+                this.input[i].moveRight();
+            }else if(trans_next_state.action_array[i]["move"] === "L"){
+                this.input[i].moveLeft();
+            }else{
+                this.input[i].moveStay();
+            }
+        }
+        
+        this.cursor.move(trans_next_state.next);
         return 0;
     } else {
         //Agora verificamos se o estado é final

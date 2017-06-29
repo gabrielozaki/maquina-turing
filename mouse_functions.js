@@ -93,7 +93,11 @@ $("#drawCanvas").on('mouseup', function (e) {
                 var state = _automaton.getStateOn(x,y);
                 if (state != null)
                 {
-                    _selected_element = _automaton.createTransition(_selected_element, state, '');
+                    var action_array_raw;
+                    for (i in []){
+                        action_array_raw.push({"read":"","write":"","move":"S"});
+                    }
+                    _selected_element = _automaton.createTransition(_selected_element, state, action_array_raw);
                     change_selected_for_input(_selected_element);
                 }
             }
