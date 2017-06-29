@@ -63,10 +63,39 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-9">
+        <div class="col-md-8">
             <canvas id="drawCanvas" width="1000" height="400"></canvas>            
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
+            <div class="panel panel-default">
+              <!-- Default panel contents -->
+                <div class="panel-heading">
+                    <h4>Automato Finito</h4>
+                    <h5>Transições</h5>
+                </div>
+
+              <!-- Table -->
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Fitas</th>
+                    <!--<th>Resultado</th>-->
+                  </tr>
+                </thead>
+                <tbody id="trans_tape">
+                  <tr>
+                    <td class="td_input" ><input type="text" class="input_test" style="width: 50px;"></td>
+                    <td class="td_input"><input type="text" class="input_test" style="width: 50px;"></td>
+                    <td class="td_input"><input type="text" class="input_test" style="width: 50px;"></td>
+                    <!--<td class="td_result"></td>-->
+                  </tr>
+                </tbody>
+              </table>
+              <div class="panel-footer">
+                <input type="submit" class="btn btn-success" id="add_input" value="Adicionar Fita">
+                <input type="submit" value="Testar" class="btn btn-default pull-right" id="btn_test">
+              </div>
+            </div>
             <div class="panel panel-default">
               <!-- Default panel contents -->
                 <div class="panel-heading">
@@ -87,6 +116,10 @@
                     <td class="td_input"><input type="text" class="input_test"></td>
                     <!--<td class="td_result"></td>-->
                   </tr>
+                  <tr>
+                    <td class="td_input"><input type="text" class="input_test"></td>
+                    <!--<td class="td_result"></td>-->
+                  </tr>
                 </tbody>
                 <tfoot id="test_footer">
                 </tfoot>
@@ -95,9 +128,7 @@
                 <input type="submit" class="btn btn-success" id="add_input" value="Adicionar Fita">
                 <input type="submit" value="Testar" class="btn btn-default pull-right" id="btn_test">
               </div>
-                
             </div>
-       
         </div>
     </div>
     <div class="row row_container " id="simulation">
@@ -112,11 +143,42 @@
 <script src="draw_functions.js"></script>
     <script type="text/javascript">
         initCanvas("drawCanvas");
-        var tapes = [[1, 2, 3, 4, 5],[1, 2, 3, 4, 5],[1, 2, 3, 4, 5]];
         var chart = "#tape1"
-        TapesSimulator(chart, tapes);
-        tapes = [[4, 2, 3, 7, 5],[1, 2, 3, 4, 5],[1, 2, 3, 4, 5]];
-        TapesSimulator(chart, tapes);
+        var input_tapes = [];
+        var ipt = new Input("abcdefghij");
+        input_tapes.push(new Input("abc"));
+        input_tapes.push(new Input("abc"));
+        input_tapes.push(new Input("abc"));
+        ipt.index = 6;
+        input_tapes.push(ipt);
+        TapesSimulator(chart, input_tapes);
     </script>
+    <script>
+        function changeTransition(i, action){
+            console.log(i);
+            console.log(action)
+        }
+        var aux_size = 5;
+        var table_trans = document.getElementById("trans_tape");
+        table_trans.innerHTML = '';
+        for (var i=0; i<aux_size; i++){
+            table_trans.innerHTML += '\
+                  <tr>\
+                    <td class="td_input" >\
+                        <input id="inpt_read_'+i+'" type="text" class="input_test" style="width: 50px;"\
+                            onchange="changeTransition('+i+', \'read\', this)">\
+                    </td>\
+                    <td class="td_input" >\
+                        <input id="inpt_write_'+i+'" type="text" class="input_test" style="width: 50px;"\
+                        onchange="changeTransition('+i+', \'write\', this)">\
+                    </td>\
+                    <td class="td_input" >\
+                        <input id="inpt_read_'+i+'" type="text" class="input_test" style="width: 50px;"\
+                        onchange="changeTransition('+i+', \'move\', this)">\
+                    </td>\
+                  </tr>\
+                  '
+        }
+</script>
 </body>
 </html>

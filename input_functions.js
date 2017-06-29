@@ -43,6 +43,20 @@ $("#input_element").on('change', function () {
     }
     updateCanvas();
 });
+function changeTransition(i, action, input){
+    console.log(i);
+    console.log(action)
+    var text = input.val();
+    console.log(text);
+    console.log(_selected_for_input);
+    if (Transition.prototype.isPrototypeOf(_selected_for_input))
+    {
+        if (text == ''){
+			text = "λ";
+		}
+        _selected_for_input.action_array[i][action] = text;
+    }
+}
 $("#is_final").on('click', function (e) {
     if (State.prototype.isPrototypeOf(_selected_for_input))
     {
