@@ -65,6 +65,9 @@
     <div class="row">
         <div class="col-md-8">
             <canvas id="drawCanvas" width="1000" height="400"></canvas>            
+            <div class="row row_container " id="simulation">
+                <div class="tape" id="tape1"></div>
+            </div>
         </div>
         <div class="col-md-4">
             <div class="panel panel-default">
@@ -92,8 +95,6 @@
                 </tbody>
               </table>
               <div class="panel-footer">
-                <input type="submit" class="btn btn-success" id="add_input" value="Adicionar Fita">
-                <input type="submit" value="Testar" class="btn btn-default pull-right" id="btn_test">
               </div>
             </div>
             <div class="panel panel-default">
@@ -125,14 +126,11 @@
                 </tfoot>
               </table>
               <div class="panel-footer">
-                <input type="submit" class="btn btn-success" id="add_input" value="Adicionar Fita">
+                <input type="submit" value="Passo" class="btn btn-default pull-right" id="btn_step">
                 <input type="submit" value="Testar" class="btn btn-default pull-right" id="btn_test">
               </div>
             </div>
         </div>
-    </div>
-    <div class="row row_container " id="simulation">
-        <div class="tape" id="tape1"></div>
     </div>
 </div>
 <script type="text/javascript" src="jquery/jquery-1.11.3.min.js"></script>
@@ -143,15 +141,6 @@
 <script src="draw_functions.js"></script>
     <script type="text/javascript">
         initCanvas("drawCanvas");
-        var chart = "#tape1"
-        var input_tapes = [];
-        var ipt = new Input("abcdefghij");
-        input_tapes.push(new Input("abc"));
-        input_tapes.push(new Input("abc"));
-        input_tapes.push(new Input("abc"));
-        ipt.index = 6;
-        input_tapes.push(ipt);
-        TapesSimulator(chart, input_tapes);
     </script>
     <script>
 /*
@@ -162,7 +151,9 @@
         */
         var aux_size = 5;
         var table_trans = document.getElementById("trans_tape");
+        var table_inputs = document.getElementById("test_tbody");
         table_trans.innerHTML = '';
+        table_inputs.innerHTML = '';
         for (var i=0; i<aux_size; i++){
             table_trans.innerHTML += '\
                   <tr>\
@@ -175,11 +166,24 @@
                         onchange="changeTransition('+i+', \'write\', this)">\
                     </td>\
                     <td class="td_input" >\
-                        <input id="inpt_move_'+i+'" type="text" class="input_test" style="width: 50px;"\
-                        onchange="changeTransition('+i+', \'move\', this)">\
+                        <select id="inpt_move_'+i+'" onchange="changeTransition('+i+', \'move\', this)">\
+                            <option>R</option>\
+                            <option>L</option>\
+                            <option>S</option>\
+                        </select>\
                     </td>\
                   </tr>\
                   '
+            table_inputs.innerHTML += '\
+                  <tr>\
+                    <td class="td_input" >\
+                        <input id="inpt_'+i+'" type="text" class="input_test">\
+                    </td>\
+                  </tr>\
+                  '
+                        /*
+                        <input id="inpt_move_'+i+'" type="text" class="input_test" style="width: 50px;"\
+                        onchange="changeTransition('+i+', \'move\', this)">\*/
         }
 </script>
 </body>

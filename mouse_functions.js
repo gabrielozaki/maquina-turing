@@ -203,14 +203,30 @@ $("#btn_gr_af").on('click', function (e) {
 });
 //run tests
 $("#btn_test").on('click', function (e) {
-    var input_array = []
-    $('#test_tbody tr').each(function() {
-        var input = $(this).find(".input_test").val();    
-        input_array.push(input);
-    });
-    var array_result = _automaton.testArray(input_array);
-    
-    updateTable(input_array,array_result,afd);
+    console.log("test");
+    var chart = "#tape1"
+    var input_tapes = [];
+    var ipt = new Input("abcdefghij");
+    input_tapes.push(new Input("abc"));
+    input_tapes.push(new Input("abc"));
+    input_tapes.push(new Input("abc"));
+    ipt.index = 6;
+    input_tapes.push(ipt);
+    TapesSimulator(chart, input_tapes);
+    //inicia
+});
+$("#btn_step").on('click', function (e) {
+    //proximo passo
+    console.log("test");
+    var chart = "#tape1"
+    var input_tapes = [];
+    var ipt = new Input("abcdefghij");
+    input_tapes.push(new Input("abc"));
+    input_tapes.push(new Input("abc"));
+    input_tapes.push(new Input("abc"));
+    ipt.index = 7;
+    input_tapes.push(ipt);
+    TapesSimulator(chart, input_tapes);
 });
 $("#grammar_btn_test").on('click', function (e) {
     var input_array = []
