@@ -96,7 +96,7 @@ $("#drawCanvas").on('mouseup', function (e) {
                 {
                     var action_array_raw = [];
                     for (var i=0; i< aux_size; i++){
-                        action_array_raw.push({"read":"","write":"","move":"S"});
+                        action_array_raw.push({"read":"λ","write":"λ","move":"S"});
                     }
                     _selected_element = _automaton.createTransition(_selected_element, state, action_array_raw);
                     change_selected_for_input(_selected_element);
