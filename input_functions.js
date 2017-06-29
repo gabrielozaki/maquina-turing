@@ -14,12 +14,12 @@ function change_selected_for_input(element)
     {
         _selected_for_input = element;
         console.log(_selected_for_input.pattern);
-        updateInputData();
     }
     else{
         return;
     }
 
+    updateInputData();
 
 };
 $("#input_element").on('change', function () {
@@ -59,6 +59,7 @@ function changeTransition(i, action, input){
 }
 function updateInputData(){
 
+    var size_again = 5;
     if (Transition.prototype.isPrototypeOf(_selected_for_input))
     {
         var action_array = _selected_for_input.action_array;
@@ -70,6 +71,17 @@ function updateInputData(){
             inpt_write.value = action_array[i]["write"];
             inpt_move.value = action_array[i]["move"];
         }
+    }
+    else{
+        for (var i = 0; i< size_again; i++){
+            var inpt_read = document.getElementById("inpt_read_"+i);
+            var inpt_write = document.getElementById("inpt_write_"+i);
+            var inpt_move = document.getElementById("inpt_move_"+i);
+            inpt_read.value = "";
+            inpt_write.value = "";
+            inpt_move.value = "";
+        }
+    
     }
 }
 
