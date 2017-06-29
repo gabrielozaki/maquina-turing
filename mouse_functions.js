@@ -203,16 +203,15 @@ $("#btn_gr_af").on('click', function (e) {
 });
 //run tests
 $("#btn_test").on('click', function (e) {
-    console.log("test");
+    var size= 5;
+    console.log("AQUIIIi");
+    input_array = []
+    for (var i=0; i<size; i++){
+        var inpt = document.getElementById("inpt_"+i);
+        input_array.push(new Input(inpt.value));
+    }
     var chart = "#tape1"
-    var input_tapes = [];
-    var ipt = new Input("abcdefghij");
-    input_tapes.push(new Input("abc"));
-    input_tapes.push(new Input("abc"));
-    input_tapes.push(new Input("abc"));
-    ipt.index = 6;
-    input_tapes.push(ipt);
-    TapesSimulator(chart, input_tapes);
+    TapesSimulator(chart, input_array);
     //inicia
 });
 $("#btn_step").on('click', function (e) {
