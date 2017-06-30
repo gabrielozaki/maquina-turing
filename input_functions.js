@@ -3,7 +3,7 @@ function change_selected_for_input(element)
     if (State.prototype.isPrototypeOf(element))
     {
         _selected_for_input = element;
-        console.log(_selected_for_input.label);
+        //console.log(_selected_for_input.label);
         $('#input_element').val(_selected_for_input.label);
         $('#is_final').each(function() { this.checked = _selected_for_input.end; });
         $('#is_initial').each(function() { this.checked = _selected_for_input.ini; });
@@ -13,7 +13,7 @@ function change_selected_for_input(element)
     else if (Transition.prototype.isPrototypeOf(element))
     {
         _selected_for_input = element;
-        console.log(_selected_for_input.pattern);
+        //console.log(_selected_for_input.pattern);
     }
     else{
         return;
@@ -43,11 +43,11 @@ $("#input_element").on('change', function () {
     updateCanvas();
 });
 function changeTransition(i, action, input){
-    console.log(i);
-    console.log(action)
+    //console.log(i);
+    //console.log(action)
     var text = input.value;
-    console.log(text);
-    console.log(_selected_for_input);
+    //console.log(text);
+    //console.log(_selected_for_input);
     if (Transition.prototype.isPrototypeOf(_selected_for_input))
     {
         if (text == ''){

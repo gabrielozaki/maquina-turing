@@ -6,8 +6,8 @@ function convertInputIntoTapes(input_array, array_size){
         var new_array = [];
         tapes.push(new_array);
         var index = input.index;
-        console.log(array);
-        console.log(index);
+        //console.log(array);
+        //console.log(index);
         // Getting the number of indexes at left of tape center
         var element_left = index - parseInt(array_size/2);
         for(var j = element_left; j<=(index + array_size/2); j++){
@@ -20,7 +20,7 @@ function convertInputIntoTapes(input_array, array_size){
 
         }
     }
-    console.log(tapes);
+    //console.log(tapes);
     return tapes;
 };
 //tapes = [[1, 2, 3, 4, 5],[1, 2, 3, 4, 5],[1, 2, 3, 4, 5]];

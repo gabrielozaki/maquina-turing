@@ -463,11 +463,18 @@ Automaton.prototype.changeInitial = function (state, ini) {
 //method tha returns a array of result by the array of inputs
 Automaton.prototype.testArray = function (input_array) {
     result_array = [];
-    for (var i = 0; i < input_array.length; i++) {
-        var machine = new Machine(this.getInitial(), input_array[i]);
+    console.log("comecei");
+    //for (var i = 0; i < input_array.length; i++) {
+        var machine = new Machine(this.getInitial(), input_array);
         result = machine.execute();
         result_array.push(result);
+    //}
+    console.log("result");
+    console.log(result_array);
+    for(var i = 0;i < machine.input.length;i++){
+        console.log(machine.input[i].input);
     }
+    
     return result_array;
 };
 
@@ -557,7 +564,7 @@ Automaton.prototype.spliceDoublePair = function (pair_array) {
 //Input class
 var Input = function (input) {
     //Input will be  a string, like: "abbcccbabbbabababa" or "1010000100000"
-    console.log(input);
+    //console.log(input);
     this.input = input.split('');
     //Copy of input, the main input will explode on test ("lol" => "l","o","l")
     this.input_copy = input;
@@ -573,7 +580,7 @@ Input.prototype.moveRight = function () {
     this.index++;
     //Case the index reach some position out of the scope, alocate a new position with a empty value
     if (this.index <= this.input.length) {
-        this.input.push("e");
+        this.input.push("λ");
     }
 };
 
@@ -583,7 +590,7 @@ Input.prototype.moveLeft = function () {
     if (this.index < 0) {
         this.index = 0;
         //
-        this.input.unshift("e");
+        this.input.unshift("λ");
     }
 };
 
@@ -629,6 +636,8 @@ var Cursor = function () {
 //All patterns must be hit to success
 Cursor.prototype.findNext = function (pattern_array) {
     //Test every transition
+    //console.log("cursor");
+    //console.log(pattern_array);
     for (var i = 0; i < this.state.transitions.length; i++) {
         var success = false;
         for (var j = 0; j < pattern_array.length; j++) {
@@ -649,26 +658,35 @@ Cursor.prototype.findNext = function (pattern_array) {
 };
 
 Cursor.prototype.move = function (state) {
+    //console.log("teste");
+    //console.log(state);
     this.state = state;
+    //console.log("teste2");
+    //console.log(this.state);
 };
 //END CURSOR METHODS
 
 //State Machine class( called only MACHINE)
 //Construtor need to recive the first element of automaton
-var Machine = function (start, tape_array) {
+var Machine = function (start, input_array) {
     //if reach the end of input in a final state
     //change this to true
     this.test = false;
 
     //creates a cursor
+    //console.log(start);
     this.cursor = new Cursor();
     this.cursor.move(start);
     //creates tape array
-    this.tape_array = [];
+    this.input = [];
     //populate the tape_array;
-    for (var i = 0; i < tape_array.length; i++) {
-        var aux = new Input(tape_array[i]);
-        this.tape_array.push(aux);
+    for (var i = 0; i < input_array.length; i++) {
+        //console.log("teste1");
+        //console.log(input_array[i]);
+        //var aux = new Input(input_array[i]);
+        //console.log("teste2");
+        this.input.push(input_array[i]);
+        //console.log("teste3");
     }
 };
 
@@ -683,22 +701,30 @@ Machine.prototype.step = function () {
 
 
     //will create a array of patterns, one pattern by tape
+    //console.log("step");
     var pattern_array = [];
     for (var i = 0; i < this.input.length; i++) {
         var aux = this.input[i].readOnPos();
+      //  console.log("read");
+       // console.log(aux);
         pattern_array.push(aux);
     }
 
     //get the next states
     trans_next_state = this.cursor.findNext(pattern_array);
+    //console.log("teste1");
+    //console.log(trans_next_state);
 
     //checks if we have a next state
-    if (trans_next_state.length !== false) {
+    if (trans_next_state !== false) {
+        //console.log("next");
         //if we have a next state, move to him and keep the state undefined
         
         //Now, we apply the necessary input changes, like write the new value e move the index
         for (var i = 0; i < this.input.length; i++) {
             //Write the new value based in the transition action_array
+            //console.log("teste1");
+            //console.log(trans_next_state);
             this.input[i].writeOnPos(trans_next_state.action_array[i]["write"]);
             //Move using the moviment
             //R - Right
