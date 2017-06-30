@@ -271,6 +271,7 @@ State.prototype.removeTransition = function (trans) {
 //Automaton is a list of states
 var Automaton = function () {
     this.states = [];
+    this.machine = null;
 };
 
 //BEGIN OF AUTOMATON METHODS
@@ -463,19 +464,52 @@ Automaton.prototype.changeInitial = function (state, ini) {
 //method tha returns a array of result by the array of inputs
 Automaton.prototype.testArray = function (input_array) {
     result_array = [];
-    console.log("comecei");
+    //console.log("comecei");
     //for (var i = 0; i < input_array.length; i++) {
         var machine = new Machine(this.getInitial(), input_array);
         result = machine.execute();
         result_array.push(result);
     //}
-    console.log("result");
-    console.log(result_array);
-    for(var i = 0;i < machine.input.length;i++){
-        console.log(machine.input[i].input);
-    }
+    //console.log("result");
+    //console.log(result);
+    //for(var i = 0;i < machine.input.length;i++){
+    //    console.log(machine.input[i].input);
+    //}
     
-    return result_array;
+    return {
+        "result":result,
+        "input":machine.input
+    };
+};
+
+Automaton.prototype.init = function (input_array) {
+    result_array = [];
+    //console.log("comecei");
+    
+        this.machine = new Machine(this.getInitial(), input_array);
+   //     result = this.machine.execute();
+       
+    //}
+    //console.log("result");
+    //console.log(result);
+    //for(var i = 0;i < machine.input.length;i++){
+    //    console.log(machine.input[i].input);
+    //}
+    
+    /*return {
+        "result":result,
+        "input":this.machine.input
+    };*/
+};
+
+Automaton.prototype.step = function(){
+    var    success = 0;
+    //runs until change the state
+    success = this.machine.step();
+    return {
+        "status":success,
+        "input":this.machine.input
+    };
 };
 
 //method tha returns the initial state from automaton
@@ -597,7 +631,7 @@ Input.prototype.moveLeft = function () {
 //Just to make a reference to stay extension of turing machine
 //Don't do nothing to index
 Input.prototype.moveStay = function () {
-    console.log("stay");
+    //console.log("stay");
 };
 
 //Cannot be only write because already exists a js function with this name

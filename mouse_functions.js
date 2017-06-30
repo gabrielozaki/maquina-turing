@@ -223,21 +223,32 @@ $("#btn_test").on('click', function (e) {
     }
     var chart = "#tape1";
     TapesSimulator(chart, input_array);
-    var array_result = _automaton.testArray(input_array);
+    //var result = _automaton.testArray(input_array);
+    _automaton.init(input_array);
     //inicia
+    //console.log(result["result"]);
+
+    //TapesSimulator(chart, result["input"]);
 });
 $("#btn_step").on('click', function (e) {
     //proximo passo
     //console.log("test");
-    var chart = "#tape1"
-    var input_tapes = [];
+    var chart = "#tape1";
+   /* var input_tapes = [];
     var ipt = new Input("abcdefghij");
     input_tapes.push(new Input("abc"));
     input_tapes.push(new Input("abc"));
     input_tapes.push(new Input("abc"));
     ipt.index = 7;
     input_tapes.push(ipt);
-    TapesSimulator(chart, input_tapes);
+    TapesSimulator(chart, input_tapes);*/
+    var result = _automaton.step();
+    TapesSimulator(chart, result["input"]);
+    if(result["status"] === 1){
+        console.log("sucesso");
+    }else if (result["status"] === -1){
+        console.log("fail");
+    }
 });
 /*$("#grammar_btn_test").on('click', function (e) {
  var input_array = []
