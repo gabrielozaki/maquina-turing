@@ -246,8 +246,9 @@ $("#btn_step").on('click', function (e) {
     TapesSimulator(chart, result["input"]);
     if(result["status"] === 1){
         console.log("sucesso");
+        alert("sucesso");
     }else if (result["status"] === -1){
-        console.log("fail");
+        alert("fail");
     }
 });
 /*$("#grammar_btn_test").on('click', function (e) {
