@@ -1,7 +1,7 @@
 var State = function(label){
     this.x = 0;
     this.y = 0;
-    this.color;
+    this.color = 'yellow';
     this.ray = 20;
     this.label = label
     //this.out_transitions = []; // tryng not to use them

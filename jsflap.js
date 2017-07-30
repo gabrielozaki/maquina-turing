@@ -126,7 +126,7 @@ var State = function (x, y, label) {
     // VISUAL PROPERTIES
     this.x = x;
     this.y = y;
-    this.color = 'black';
+    this.color = 'yellow';
     this.radius = 20;
     this.label = label;
 };
@@ -172,9 +172,9 @@ State.prototype.getTransitionOn = function (x, y) {
 State.prototype.drawState = function () {
     _context.beginPath();
     _context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
-    _context.strokeStyle = this.color;
+    _context.strokeStyle = 'black';
     _context.stroke();
-    _context.fillStyle = 'yellow';
+    _context.fillStyle = this.color;
     _context.fill();
     _context.fillStyle = 'black';
     var text = this.label;
@@ -197,7 +197,7 @@ State.prototype.drawState = function () {
 State.prototype.drawFinalIndicator = function () {
     _context.beginPath();
     _context.arc(this.x, this.y, this.radius - (this.radius / 5), 0, 2 * Math.PI);
-    _context.strokeStyle = this.color;
+    _context.strokeStyle = 'black';
     _context.stroke();
     _context.closePath();
 
@@ -210,7 +210,7 @@ State.prototype.drawInitialIndicator = function () {
     _context.lineTo(this.x - (this.radius * 2), this.y - this.radius);
     _context.lineTo(this.x - (this.radius * 2), this.y + this.radius);
     _context.lineTo(this.x - this.radius, this.y);
-    _context.strokeStyle = this.color;
+    _context.strokeStyle = 'black';
     _context.stroke();
     _context.fillStyle = 'gray';
     _context.fill();
@@ -276,6 +276,86 @@ var Automaton = function () {
 
 //BEGIN OF AUTOMATON METHODS
 
+Automaton.prototype.loadFromFile = function (file_content) {
+	var parser = new DOMParser();
+    //important to use "text/xml"
+	var xmlDoc = parser.parseFromString(file_content, "text/xml");
+    var node = xmlDoc.createElement("heyHo");
+	var elements = xmlDoc.getElementsByTagName("root");
+	elements[0].appendChild(node);
+};
+
+Automaton.prototype.exportToFile = function () {
+    var file_content = "<?xml version='1.0' encoding='UTF-8' standalone='no'?>"+
+		"<structure>"+
+		"	<type>turing</type>"+
+		"	<tapes>5</tapes>"+
+		"	<automaton>"+
+		"	</automaton>"+
+		"</structure>"
+	var parser = new DOMParser();
+    //important to use "text/xml"
+	var xmlDoc = parser.parseFromString(file_content, "text/xml");
+    var node = xmlDoc.createElement("heyHo");
+	var elements = xmlDoc.getElementsByTagName("automaton");
+	var automaton_div = elements[0];
+
+    for (var i in _automaton.states){
+        var block = xmlDoc.createElement("block");
+        var tag = xmlDoc.createElement("tag");
+        var cur_state = _automaton.states[i];
+        tag.innerHTML = 'Machine'+i;
+        block.appendChild(tag)
+
+        if (cur_state.ini){
+            var initial = xmlDoc.createElement("initial");
+            block.appendChild(initial);
+        }
+        if (cur_state.end){
+            var end = xmlDoc.createElement("final");
+            block.appendChild(end);
+        }
+        block.setAttribute("id", i);
+        block.setAttribute("name", cur_state.label);
+        automaton_div.appendChild(block);
+        for (var j in cur_state.transitions){
+            var cur_transition = cur_state.transitions[j];
+            var transition = xmlDoc.createElement("transition");
+            var from = xmlDoc.createElement("from");
+            var to = xmlDoc.createElement("to");
+            from.innerHTML = i;
+            to.innerHTML = _automaton.states.indexOf(cur_transition.next);
+            transition.appendChild(from);
+            transition.appendChild(to);
+            for (var k in cur_transition.action_array){
+                var action = cur_transition.action_array[k];
+                var read = xmlDoc.createElement("read");
+                var write = xmlDoc.createElement("write");
+                var move = xmlDoc.createElement("move");
+                read.innerHTML = action['read'];
+                write.innerHTML = action['write'];
+                move.innerHTML = action['move'];
+                var tape_nmb = 1+parseInt(k);
+                read.setAttribute("tape", tape_nmb.toString());
+                write.setAttribute("tape", tape_nmb.toString());
+                move.setAttribute("tape", tape_nmb.toString());
+                transition.appendChild(read);
+                transition.appendChild(write);
+                transition.appendChild(move);
+            }
+            automaton_div.appendChild(transition);
+        }
+    }
+
+    var xmlText = new XMLSerializer().serializeToString(xmlDoc);
+    return xmlText;
+};
+//Method used to set the colors of all stations
+Automaton.prototype.setStatesColor = function (color) {
+    for (var i = 0; i < this.states.length; i++) {
+        this.states[i].color=color;
+    }
+};
 //Method used to draw the state list insite a Automaton
 Automaton.prototype.drawAutomaton = function () {
     for (var i = 0; i < this.states.length; i++) {
@@ -507,8 +587,9 @@ Automaton.prototype.step = function(){
     //runs until change the state
     success = this.machine.step();
     return {
-        "status":success,
-        "input":this.machine.input
+        "status": success,
+        "input": this.machine.input,
+        "state": this.machine.cursor.state
     };
 };
 
@@ -804,6 +885,7 @@ Machine.prototype.execute = function () {
     else
         return false;
 };
+
 //END OF MACHINE METHODS
 
 

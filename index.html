@@ -58,6 +58,15 @@
                             </label>
                         </div>
                     </div>
+                    <div class="col-md-4">
+						<div>Abrir Arquivo:</div>
+						<input type="file" id="file-input" />
+					</div>
+                    <div class="col-md-4">
+						<a href="" id="a-file" style="display:none;">Salvar Arquivo</a>
+						<div>Salvar Arquivo:</div>
+						<button onclick="download('myMT.jff', 'text/xml')">Salvar Arquivo</button>
+					</div>
                 </div>  
             </div>
         </div>
@@ -139,6 +148,7 @@
 <script src="input_functions.js"></script>
 <script src="mouse_functions.js"></script>
 <script src="draw_functions.js"></script>
+<script src="file.js"></script>
     <script type="text/javascript">
         initCanvas("drawCanvas");
     </script>

@@ -225,6 +225,9 @@ $("#btn_test").on('click', function (e) {
     TapesSimulator(chart, input_array);
     //var result = _automaton.testArray(input_array);
     _automaton.init(input_array);
+    _automaton.setStatesColor("yellow");
+    _automaton.machine.cursor.state.color='green';
+    _automaton.drawAutomaton();
     //inicia
     //console.log(result["result"]);
 
@@ -243,6 +246,9 @@ $("#btn_step").on('click', function (e) {
     input_tapes.push(ipt);
     TapesSimulator(chart, input_tapes);*/
     var result = _automaton.step();
+    _automaton.setStatesColor("yellow");
+    result["state"].color='green';
+    _automaton.drawAutomaton();
     TapesSimulator(chart, result["input"]);
     if(result["status"] === 1){
         console.log("sucesso");
