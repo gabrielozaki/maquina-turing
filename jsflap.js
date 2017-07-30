@@ -275,14 +275,71 @@ var Automaton = function () {
 };
 
 //BEGIN OF AUTOMATON METHODS
+function getElementByAttribute(attr, value, root) {
+    root = root || document.body;
+    if(root.hasAttribute(attr) && root.getAttribute(attr) == value) {
+        return root;
+    }
+    var children = root.children,
+        element;
+    for(var i = children.length; i--; ) {
+        element = getElementByAttribute(attr, value, children[i]);
+        if(element) {
+            return element;
+        }
+    }
+    return null;
+}
 
 Automaton.prototype.loadFromFile = function (file_content) {
 	var parser = new DOMParser();
     //important to use "text/xml"
 	var xmlDoc = parser.parseFromString(file_content, "text/xml");
-    var node = xmlDoc.createElement("heyHo");
-	var elements = xmlDoc.getElementsByTagName("root");
-	elements[0].appendChild(node);
+	var blocks = xmlDoc.getElementsByTagName("block");
+    var transitions = xmlDoc.getElementsByTagName("transition");
+    _automaton = new Automaton();
+    for (var i=0; i <blocks.length; i++){
+        var block = blocks[i];
+        var label = block.getAttribute("name");
+        var state = new State(i*5, i*5, block.getAttribute("name"));
+        if(block.getElementsByTagName("initial").length>0){
+            state.ini = true;
+        }
+        if(block.getElementsByTagName("final").length>0){
+            state.end = true;
+        }
+        _automaton.states.push(state);
+    }
+    for(var i=0; i<transitions.length; i++){
+        var trans = transitions[i];
+        var from = _automaton.states[trans.getElementsByTagName("from")[0].innerHTML];
+        var to = _automaton.states[trans.getElementsByTagName("to")[0].innerHTML];
+        var action_array=[];
+        for(var j=0; j<5; j++){
+            var tape = [];
+            if (trans.getElementsByTagName("read")[j]){
+                tape["read"] = trans.getElementsByTagName("read")[j].innerHTML;
+            }
+            else{
+                tape["read"] = "~";
+            }
+            if (trans.getElementsByTagName("write")[j]){
+                tape["write"] = trans.getElementsByTagName("write")[j].innerHTML;
+            }
+            else{
+                tape["write"] = "~";
+            }
+            if (trans.getElementsByTagName("move")[j]){
+                tape["move"] = trans.getElementsByTagName("move")[j].innerHTML;
+            }
+            else{
+                tape["move"] = "S";
+            }
+            action_array.push(tape);
+        }
+        _automaton.createTransition(from, to, action_array);
+    }
+    updateCanvas();
 };
 
 Automaton.prototype.exportToFile = function () {
