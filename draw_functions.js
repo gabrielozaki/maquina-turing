@@ -1,5 +1,5 @@
 function convertInputIntoTapes(input_array, array_size){
-    console.log(input_array);
+    //console.log(input_array);
     var tapes = [];
     for (var i in input_array){
         var input = input_array[i];

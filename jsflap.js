@@ -35,9 +35,9 @@ Transition.prototype.drawTransition = function (origin, y_factor) {
     var color = "black";
     var text_x = text_y = 0;
     var text = "| ";
-    for(var i=0; i<this.action_array.length; i++){
+    for (var i = 0; i < this.action_array.length; i++) {
         action = this.action_array[i];
-        text += ""+action["read"]+"; "+action["write"]+"; "+action["move"]+" | ";
+        text += "" + action["read"] + "; " + action["write"] + "; " + action["move"] + " | ";
     }
     _context.font = "14px Arial";
     var text_size = _context.measureText(text);
@@ -277,14 +277,14 @@ var Automaton = function () {
 //BEGIN OF AUTOMATON METHODS
 function getElementByAttribute(attr, value, root) {
     root = root || document.body;
-    if(root.hasAttribute(attr) && root.getAttribute(attr) == value) {
+    if (root.hasAttribute(attr) && root.getAttribute(attr) == value) {
         return root;
     }
     var children = root.children,
-        element;
-    for(var i = children.length; i--; ) {
+            element;
+    for (var i = children.length; i--; ) {
         element = getElementByAttribute(attr, value, children[i]);
-        if(element) {
+        if (element) {
             return element;
         }
     }
@@ -292,47 +292,54 @@ function getElementByAttribute(attr, value, root) {
 }
 
 Automaton.prototype.loadFromFile = function (file_content) {
-	var parser = new DOMParser();
+
+    var parser = new DOMParser();
     //important to use "text/xml"
-	var xmlDoc = parser.parseFromString(file_content, "text/xml");
-	var blocks = xmlDoc.getElementsByTagName("block");
+    var xmlDoc = parser.parseFromString(file_content, "text/xml");
+    var blocks = xmlDoc.getElementsByTagName("block");
     var transitions = xmlDoc.getElementsByTagName("transition");
     _automaton = new Automaton();
-    for (var i=0; i <blocks.length; i++){
+    for (var i = 0; i < blocks.length; i++) {
         var block = blocks[i];
         var label = block.getAttribute("name");
-        var state = new State(i*5, i*5, block.getAttribute("name"));
-        if(block.getElementsByTagName("initial").length>0){
+        var state = new State(i * 5, i * 5, block.getAttribute("name"));
+        if (block.getElementsByTagName("initial").length > 0) {
             state.ini = true;
         }
-        if(block.getElementsByTagName("final").length>0){
+        if (block.getElementsByTagName("final").length > 0) {
             state.end = true;
         }
         _automaton.states.push(state);
     }
-    for(var i=0; i<transitions.length; i++){
+    for (var i = 0; i < transitions.length; i++) {
         var trans = transitions[i];
         var from = _automaton.states[trans.getElementsByTagName("from")[0].innerHTML];
         var to = _automaton.states[trans.getElementsByTagName("to")[0].innerHTML];
-        var action_array=[];
-        for(var j=0; j<5; j++){
+        var action_array = [];
+        for (var j = 0; j < 5; j++) {
             var tape = [];
-            if (trans.getElementsByTagName("read")[j]){
-                tape["read"] = trans.getElementsByTagName("read")[j].innerHTML;
-            }
-            else{
+
+            if (trans.getElementsByTagName("read")[j]) {
+                if (trans.getElementsByTagName("read")[j].innerHTML !== '') {
+                    tape["read"] = trans.getElementsByTagName("read")[j].innerHTML;
+                } else {
+                    tape["read"] = 'λ';
+                }
+            } else {
                 tape["read"] = "~";
             }
-            if (trans.getElementsByTagName("write")[j]){
-                tape["write"] = trans.getElementsByTagName("write")[j].innerHTML;
-            }
-            else{
+            if (trans.getElementsByTagName("write")[j]) {
+                if (trans.getElementsByTagName("write")[j].innerHTML !== '') {
+                    tape["write"] = trans.getElementsByTagName("write")[j].innerHTML;
+                } else {
+                    tape["write"] = 'λ';
+                }
+            } else {
                 tape["write"] = "~";
             }
-            if (trans.getElementsByTagName("move")[j]){
+            if (trans.getElementsByTagName("move")[j]) {
                 tape["move"] = trans.getElementsByTagName("move")[j].innerHTML;
-            }
-            else{
+            } else {
                 tape["move"] = "S";
             }
             action_array.push(tape);
@@ -343,39 +350,39 @@ Automaton.prototype.loadFromFile = function (file_content) {
 };
 
 Automaton.prototype.exportToFile = function () {
-    var file_content = "<?xml version='1.0' encoding='UTF-8' standalone='no'?>"+
-		"<structure>"+
-		"	<type>turing</type>"+
-		"	<tapes>5</tapes>"+
-		"	<automaton>"+
-		"	</automaton>"+
-		"</structure>"
-	var parser = new DOMParser();
+    var file_content = "<?xml version='1.0' encoding='UTF-8' standalone='no'?>" +
+            "<structure>" +
+            "	<type>turing</type>" +
+            "	<tapes>5</tapes>" +
+            "	<automaton>" +
+            "	</automaton>" +
+            "</structure>"
+    var parser = new DOMParser();
     //important to use "text/xml"
-	var xmlDoc = parser.parseFromString(file_content, "text/xml");
+    var xmlDoc = parser.parseFromString(file_content, "text/xml");
     var node = xmlDoc.createElement("heyHo");
-	var elements = xmlDoc.getElementsByTagName("automaton");
-	var automaton_div = elements[0];
+    var elements = xmlDoc.getElementsByTagName("automaton");
+    var automaton_div = elements[0];
 
-    for (var i in _automaton.states){
+    for (var i in _automaton.states) {
         var block = xmlDoc.createElement("block");
         var tag = xmlDoc.createElement("tag");
         var cur_state = _automaton.states[i];
-        tag.innerHTML = 'Machine'+i;
+        tag.innerHTML = 'Machine' + i;
         block.appendChild(tag)
 
-        if (cur_state.ini){
+        if (cur_state.ini) {
             var initial = xmlDoc.createElement("initial");
             block.appendChild(initial);
         }
-        if (cur_state.end){
+        if (cur_state.end) {
             var end = xmlDoc.createElement("final");
             block.appendChild(end);
         }
         block.setAttribute("id", i);
         block.setAttribute("name", cur_state.label);
         automaton_div.appendChild(block);
-        for (var j in cur_state.transitions){
+        for (var j in cur_state.transitions) {
             var cur_transition = cur_state.transitions[j];
             var transition = xmlDoc.createElement("transition");
             var from = xmlDoc.createElement("from");
@@ -384,7 +391,7 @@ Automaton.prototype.exportToFile = function () {
             to.innerHTML = _automaton.states.indexOf(cur_transition.next);
             transition.appendChild(from);
             transition.appendChild(to);
-            for (var k in cur_transition.action_array){
+            for (var k in cur_transition.action_array) {
                 var action = cur_transition.action_array[k];
                 var read = xmlDoc.createElement("read");
                 var write = xmlDoc.createElement("write");
@@ -392,7 +399,7 @@ Automaton.prototype.exportToFile = function () {
                 read.innerHTML = action['read'];
                 write.innerHTML = action['write'];
                 move.innerHTML = action['move'];
-                var tape_nmb = 1+parseInt(k);
+                var tape_nmb = 1 + parseInt(k);
                 read.setAttribute("tape", tape_nmb.toString());
                 write.setAttribute("tape", tape_nmb.toString());
                 move.setAttribute("tape", tape_nmb.toString());
@@ -410,7 +417,7 @@ Automaton.prototype.exportToFile = function () {
 //Method used to set the colors of all stations
 Automaton.prototype.setStatesColor = function (color) {
     for (var i = 0; i < this.states.length; i++) {
-        this.states[i].color=color;
+        this.states[i].color = color;
     }
 };
 //Method used to draw the state list insite a Automaton
@@ -603,44 +610,44 @@ Automaton.prototype.testArray = function (input_array) {
     result_array = [];
     //console.log("comecei");
     //for (var i = 0; i < input_array.length; i++) {
-        var machine = new Machine(this.getInitial(), input_array);
-        result = machine.execute();
-        result_array.push(result);
+    var machine = new Machine(this.getInitial(), input_array);
+    result = machine.execute();
+    result_array.push(result);
     //}
     //console.log("result");
     //console.log(result);
     //for(var i = 0;i < machine.input.length;i++){
     //    console.log(machine.input[i].input);
     //}
-    
+
     return {
-        "result":result,
-        "input":machine.input
+        "result": result,
+        "input": machine.input
     };
 };
 
 Automaton.prototype.init = function (input_array) {
     result_array = [];
     //console.log("comecei");
-    
-        this.machine = new Machine(this.getInitial(), input_array);
-   //     result = this.machine.execute();
-       
+
+    this.machine = new Machine(this.getInitial(), input_array);
+    //     result = this.machine.execute();
+
     //}
     //console.log("result");
     //console.log(result);
     //for(var i = 0;i < machine.input.length;i++){
     //    console.log(machine.input[i].input);
     //}
-    
+
     /*return {
-        "result":result,
-        "input":this.machine.input
-    };*/
+     "result":result,
+     "input":this.machine.input
+     };*/
 };
 
-Automaton.prototype.step = function(){
-    var    success = 0;
+Automaton.prototype.step = function () {
+    var success = 0;
     //runs until change the state
     success = this.machine.step();
     return {
@@ -775,7 +782,9 @@ Input.prototype.moveStay = function () {
 //Cannot be only write because already exists a js function with this name
 //Value is what will be write on the position
 Input.prototype.writeOnPos = function (value) {
-    this.input[this.index] = value;
+    if (value !== '~') {
+        this.input[this.index] = value;
+    }
 };
 
 Input.prototype.readOnPos = function () {
@@ -813,7 +822,8 @@ Cursor.prototype.findNext = function (pattern_array) {
     for (var i = 0; i < this.state.transitions.length; i++) {
         var success = false;
         for (var j = 0; j < pattern_array.length; j++) {
-            if (this.state.transitions[i].action_array[j]["read"] === pattern_array[j]) {
+            
+            if (this.state.transitions[i].action_array[j]["read"] === pattern_array[j] || this.state.transitions[i].action_array[j]["read"] === "~") {
                 success = true;
             } else {
                 success = false;
@@ -821,6 +831,7 @@ Cursor.prototype.findNext = function (pattern_array) {
             }
         }
         if (success) {
+            
             return this.state.transitions[i]; //return the transition
         }
     }
@@ -877,8 +888,8 @@ Machine.prototype.step = function () {
     var pattern_array = [];
     for (var i = 0; i < this.input.length; i++) {
         var aux = this.input[i].readOnPos();
-      //  console.log("read");
-       // console.log(aux);
+        //  console.log("read");
+        // console.log(aux);
         pattern_array.push(aux);
     }
 
@@ -891,7 +902,7 @@ Machine.prototype.step = function () {
     if (trans_next_state !== false) {
         //console.log("next");
         //if we have a next state, move to him and keep the state undefined
-        
+
         //Now, we apply the necessary input changes, like write the new value e move the index
         for (var i = 0; i < this.input.length; i++) {
             //Write the new value based in the transition action_array
@@ -902,15 +913,15 @@ Machine.prototype.step = function () {
             //R - Right
             //L - Left
             //S - Stay
-            if(trans_next_state.action_array[i]["move"] === "R"){
+            if (trans_next_state.action_array[i]["move"] === "R") {
                 this.input[i].moveRight();
-            }else if(trans_next_state.action_array[i]["move"] === "L"){
+            } else if (trans_next_state.action_array[i]["move"] === "L") {
                 this.input[i].moveLeft();
-            }else{
+            } else {
                 this.input[i].moveStay();
             }
         }
-        
+
         this.cursor.move(trans_next_state.next);
         return 0;
     } else {

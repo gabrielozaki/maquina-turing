@@ -226,7 +226,7 @@ $("#btn_test").on('click', function (e) {
     //var result = _automaton.testArray(input_array);
     _automaton.init(input_array);
     _automaton.setStatesColor("yellow");
-    _automaton.machine.cursor.state.color='green';
+    _automaton.machine.cursor.state.color = 'green';
     _automaton.drawAutomaton();
     //inicia
     //console.log(result["result"]);
@@ -237,24 +237,63 @@ $("#btn_step").on('click', function (e) {
     //proximo passo
     //console.log("test");
     var chart = "#tape1";
-   /* var input_tapes = [];
-    var ipt = new Input("abcdefghij");
-    input_tapes.push(new Input("abc"));
-    input_tapes.push(new Input("abc"));
-    input_tapes.push(new Input("abc"));
-    ipt.index = 7;
-    input_tapes.push(ipt);
-    TapesSimulator(chart, input_tapes);*/
+    /* var input_tapes = [];
+     var ipt = new Input("abcdefghij");
+     input_tapes.push(new Input("abc"));
+     input_tapes.push(new Input("abc"));
+     input_tapes.push(new Input("abc"));
+     ipt.index = 7;
+     input_tapes.push(ipt);
+     TapesSimulator(chart, input_tapes);*/
     var result = _automaton.step();
     _automaton.setStatesColor("yellow");
-    result["state"].color='green';
+    result["state"].color = 'green';
     _automaton.drawAutomaton();
     TapesSimulator(chart, result["input"]);
-    if(result["status"] === 1){
+    if (result["status"] === 1) {
         console.log("sucesso");
         alert("sucesso");
-    }else if (result["status"] === -1){
+    } else if (result["status"] === -1) {
         alert("fail");
+    }
+});
+
+$("#btn_step_auto").on('click', function (e) {
+    var id = setInterval(function () {
+        var chart = "#tape1";
+        var result = _automaton.step();
+        _automaton.setStatesColor("yellow");
+        result["state"].color = 'green';
+        _automaton.drawAutomaton();
+        TapesSimulator(chart, result["input"]);
+        if (result["status"] === 1) {
+            console.log("sucesso");
+            alert("sucesso");
+            clearInterval(id);
+        } else if (result["status"] === -1) {
+            alert("fail");
+            clearInterval(id);
+        }
+    }, 250);
+});
+
+$("#btn_fast").on('click', function (e) {
+
+    var chart = "#tape1";
+    while (true) {
+        var result = _automaton.step()
+        _automaton.setStatesColor("yellow");
+        result["state"].color = 'green';
+        _automaton.drawAutomaton();
+        TapesSimulator(chart, result["input"]);
+        if (result["status"] === 1) {
+            console.log("sucesso");
+            alert("sucesso");
+            break;
+        } else if (result["status"] === -1) {
+            alert("fail");
+            break;
+        }
     }
 });
 /*$("#grammar_btn_test").on('click', function (e) {
